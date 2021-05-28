@@ -25,7 +25,7 @@ public class Demo
       hql+="FROM Producto p ";
       hql+="WHERE p.proveedor.empresa=:emp ";
       Query q = MyHibernate.createQuery(hql);
-      q.setParameter("emp","Sony");
+      q.setParameter("emp","'Sony'");
       List<Producto> lst2 = q.getResultList();
       for(Producto px:lst2)
       {

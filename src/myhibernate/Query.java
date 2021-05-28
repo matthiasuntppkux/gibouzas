@@ -22,7 +22,7 @@ public class Query<T>
    public List<T> getResultList() {
       String sql = sqlSinParametros;
       for(String pName : parameters.keySet()){
-         sql = sql.replaceAll( ":" + pName,"'" + parameters.get(pName).toString() + "'");
+         sql = sql.replaceAll( ":" + pName, parameters.get(pName).toString());
       }
       return MyHibernate.obtenerObjetos(MyHibernate.ejecutarQuerySQL(sql),clazz);
    }

@@ -55,16 +55,19 @@ public class MyHibernate
 		return obtenerObjetos(ejecutarQuerySQL(generarSQLdinamico(clazz)),clazz);
 	}
 
+
+	/**
+	 * FROM <path> [alias] [WHERE expresiones]
+	 */
 	public static <T> Query createQuery(String hql) { //Solo FROM y WHERE
 		String path;
-		String expresiones;
+		String expresiones = null;
 		if(hql.startsWith("FROM")){
 			if(hql.contains("WHERE")){
 				path = hql.subSequence(5,hql.indexOf("WHERE")).toString();
 				expresiones = hql.subSequence(hql.indexOf("WHERE") + 5,hql.length()).toString();
 			} else {
 				path = hql.subSequence(5,hql.length()).toString();
-				expresiones = null;
 			}
 		} else {
 			throw new RuntimeException("El HQL " + hql + " no contiene el FROM");
@@ -75,8 +78,11 @@ public class MyHibernate
 		Class<T> clazz;
 		try {
 			clazz = (Class<T>) Class.forName("myhibernate.demo." + pathArr[0]);
-			if(expresiones != null && pathArr.length > 1){
-				expresiones = expresiones.replaceAll("\\s" + pathArr[1] + ".","");
+			if(expresiones != null){
+				if(pathArr.length > 1) {
+					expresiones = expresiones.replaceAll("\\s" + pathArr[1] + "\\.","");
+				}
+				expresiones = expresiones.replaceAll(","," AND ");
 			}
 			sql = generarSQLdinamico(clazz, expresiones);
 		} catch(ClassNotFoundException e) {
